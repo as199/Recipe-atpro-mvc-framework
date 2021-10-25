@@ -6,6 +6,6 @@ class Import
 {
     public static function helper(): string
     {
-        return 'Atpro/mvc/Config/services/AtproHelper.php';
+        return '\vendor/dione/recipe-atpro-mvc-framework/Config/services/AtproHelper.php';
     }
 }

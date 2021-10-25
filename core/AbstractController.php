@@ -27,7 +27,7 @@ abstract class AbstractController
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    public function render(string $fichier, array $data = []): void
+    public function render(string $fichier, array $data = [])
     {
         $loader = new FilesystemLoader('../'.VIEWS_FILES);
         $twig = new Environment($loader, [

@@ -1,6 +1,6 @@
 <?php
 
-namespace Atpro\Config\services;
+namespace Atpro\mvc\Config\services;
 
 use Atpro\mvc\core\AbstractController;
 

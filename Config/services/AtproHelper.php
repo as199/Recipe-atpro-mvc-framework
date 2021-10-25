@@ -1,8 +1,10 @@
 <?php
 
-use Atpro\Config\services\Jwt;
+
 
 //#region DEFINITION DES CONSTANTES DE L'APPLICATION
+use Atpro\mvc\Config\services\Jwt;
+
 define("VIEWS_FILES", $_ENV['VIEWS_FILES']);
 define('ROOT', dirname(__DIR__));
 define("PROTOCAL", $_ENV['ENV'] === 'development' ? 'http' : 'https');
@@ -18,7 +20,7 @@ const FLASH = "flash";
  * @return bool
  * Permet de dire si la request provient d'un api
  */
-function isAPI()
+function isAPI(): bool
 {
     $urls = explode("/", filter_var(trim(GLOBAL_URL, "/"), FILTER_SANITIZE_URL));
     return $urls[0] === "api";
@@ -415,7 +417,7 @@ function setPayload(int $id, array $roles, string $email, array $options = [])
  * @return mixed|null
  * @throws JsonException
  */
-function verifToken()
+function verifToken(): mixed
 {
     $token = getToken();
     if (!isset($token) || !preg_match('/Bearer\s(\S+)/', $token, $matches)) {
