@@ -555,14 +555,5 @@
         }
     ],
     "dev": true,
-    "dev-package-names": [
-        "dompdf/dompdf",
-        "phenx/php-font-lib",
-        "phenx/php-svg-lib",
-        "phpmailer/phpmailer",
-        "sabberworm/php-css-parser",
-        "symfony/polyfill-ctype",
-        "symfony/polyfill-mbstring",
-        "twig/twig"
-    ]
+    "dev-package-names": []
 }

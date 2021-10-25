@@ -13,8 +13,9 @@
         }
     ],
     "minimum-stability": "dev",
-    "require-dev": {
+    "require": {
         "ext-pdo": "*",
+        "composer-runtime-api": "^2.0",
         "twig/twig": "^3.3",
         "phpmailer/phpmailer": "^6.5",
         "dompdf/dompdf": "^1.0"

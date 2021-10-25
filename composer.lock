@@ -4,9 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "92cc076588bc940d4ff1272b93e56124",
-    "packages": [],
-    "packages-dev": [
+    "content-hash": "15e5adfe94d202c86c087abd1ef36b84",
+    "packages": [
         {
             "name": "dompdf/dompdf",
             "version": "v1.0.2",
@@ -537,14 +536,16 @@
             "time": "2021-10-18T08:00:25+00:00"
         }
     ],
+    "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": {
-        "ext-pdo": "*"
+    "platform": {
+        "ext-pdo": "*",
+        "composer-runtime-api": "^2.0"
     },
+    "platform-dev": [],
     "plugin-api-version": "2.1.0"
 }
