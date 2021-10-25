@@ -12,6 +12,7 @@
             "email": "dioneassane0290@gmail.com"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "ext-pdo": "*",
         "twig/twig": "^3.3",
