@@ -2,6 +2,8 @@
 
 namespace Atpro\mvc\Config\api;
 
+use JsonException;
+
 class ApiRouter
 {
 
@@ -59,6 +61,9 @@ class ApiRouter
         $this->routes['PUT'][] = new ApiRoute($path, $action);
     }
 
+    /**
+     * @throws JsonException
+     */
     public function run()
     {
         if (!isset($this->routes[$_SERVER['REQUEST_METHOD']])) {
@@ -70,6 +75,7 @@ class ApiRouter
         }
         foreach ($this->routes[$_SERVER['REQUEST_METHOD']] as $route) {
             if ($route->matches($this->url)) {
+                headers($_SERVER['REQUEST_METHOD']);
                 return $route->execute();
             }
         }
