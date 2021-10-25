@@ -1,22 +1,22 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => NULL,
+        'reference' => '1653b81a7b581812985117f3808c0df697add70a',
         'name' => 'dione/recipe-atpro-mvc-framework',
         'dev' => true,
     ),
     'versions' => array(
         'dione/recipe-atpro-mvc-framework' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => NULL,
+            'reference' => '1653b81a7b581812985117f3808c0df697add70a',
             'dev_requirement' => false,
         ),
         'dompdf/dompdf' => array(
