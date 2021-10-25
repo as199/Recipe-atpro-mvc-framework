@@ -6,6 +6,6 @@ class Import
 {
     public static function helper(): string
     {
-        return '/app/Config/services/AtproHelper.php';
+        return 'Atpro/mvc/Config/services/AtproHelper.php';
     }
 }
