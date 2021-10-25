@@ -1,0 +1,54 @@
+<?php
+
+namespace Atpro\mvc\Config\api;
+
+use JsonException;
+
+class ApiRoute
+{
+    public string $path;
+    public string $action;
+    public $matchs;
+
+    public function __construct($path, $action)
+    {
+        $pathBrute = explode(DIRECTORY_SEPARATOR, trim($path, DIRECTORY_SEPARATOR));
+        unset($pathBrute[0]);
+        $this->path  = trim(implode(DIRECTORY_SEPARATOR, $pathBrute), DIRECTORY_SEPARATOR);
+        $this->action = $action;
+    }
+
+    public function matches(string $url): bool
+    {
+        $path = preg_replace('#:([\w]+)#', '([^/]+)', $this->path);
+        $pathToMatch = "#^$path$#";
+
+        if (preg_match($pathToMatch, $url, $matches)) {
+            $this->matchs = $matches;
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function execute()
+    {
+        $params = explode('@', $this->action);
+        $controller = new $params[0]();
+        $method = $params[1];
+        if (method_exists($controller, $method)) {
+            $result = empty($controller->getAccess()) || VerifierAccessApi($controller->getAccess(), $method);
+            if ($result) {
+                return (isset($this->matchs[1])) ? $controller->$method($this->matchs[1]) : $controller->$method();
+            }
+
+            http_response_code(401);
+            Json_response(['message' => 'Access not autoriser']);
+        }
+        http_response_code(500);
+        Json_response(['message' => 'cette routes nexiste pas']);
+    }
+}
