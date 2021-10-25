@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '19aad92dad7e8d1abf5d72499b56bf917567825f',
+        'reference' => '5dc2fc613e04323115a72b1992c456efc60b1f71',
         'name' => 'dione/recipe-atpro-mvc-framework',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '19aad92dad7e8d1abf5d72499b56bf917567825f',
+            'reference' => '5dc2fc613e04323115a72b1992c456efc60b1f71',
             'dev_requirement' => false,
         ),
         'dompdf/dompdf' => array(
@@ -26,7 +26,7 @@
             'install_path' => __DIR__ . '/../dompdf/dompdf',
             'aliases' => array(),
             'reference' => '8768448244967a46d6e67b891d30878e0e15d25c',
-            'dev_requirement' => false,
+            'dev_requirement' => true,
         ),
         'phenx/php-font-lib' => array(
             'pretty_version' => '0.5.2',
@@ -35,7 +35,7 @@
             'install_path' => __DIR__ . '/../phenx/php-font-lib',
             'aliases' => array(),
             'reference' => 'ca6ad461f032145fff5971b5985e5af9e7fa88d8',
-            'dev_requirement' => false,
+            'dev_requirement' => true,
         ),
         'phenx/php-svg-lib' => array(
             'pretty_version' => '0.3.4',
@@ -44,7 +44,7 @@
             'install_path' => __DIR__ . '/../phenx/php-svg-lib',
             'aliases' => array(),
             'reference' => 'f627771eb854aa7f45f80add0f23c6c4d67ea0f2',
-            'dev_requirement' => false,
+            'dev_requirement' => true,
         ),
         'phpmailer/phpmailer' => array(
             'pretty_version' => 'v6.5.1',
@@ -53,7 +53,7 @@
             'install_path' => __DIR__ . '/../phpmailer/phpmailer',
             'aliases' => array(),
             'reference' => 'dd803df5ad7492e1b40637f7ebd258fee5ca7355',
-            'dev_requirement' => false,
+            'dev_requirement' => true,
         ),
         'sabberworm/php-css-parser' => array(
             'pretty_version' => '8.3.1',
@@ -62,7 +62,7 @@
             'install_path' => __DIR__ . '/../sabberworm/php-css-parser',
             'aliases' => array(),
             'reference' => 'd217848e1396ef962fb1997cf3e2421acba7f796',
-            'dev_requirement' => false,
+            'dev_requirement' => true,
         ),
         'symfony/polyfill-ctype' => array(
             'pretty_version' => 'dev-main',
@@ -73,7 +73,7 @@
                 0 => '1.23.x-dev',
             ),
             'reference' => '30885182c981ab175d4d034db0f6f469898070ab',
-            'dev_requirement' => false,
+            'dev_requirement' => true,
         ),
         'symfony/polyfill-mbstring' => array(
             'pretty_version' => 'dev-main',
@@ -84,7 +84,7 @@
                 0 => '1.23.x-dev',
             ),
             'reference' => '11b9acb5e8619aef6455735debf77dde8825795c',
-            'dev_requirement' => false,
+            'dev_requirement' => true,
         ),
         'twig/twig' => array(
             'pretty_version' => '3.x-dev',
@@ -93,7 +93,7 @@
             'install_path' => __DIR__ . '/../twig/twig',
             'aliases' => array(),
             'reference' => '3e4b22ce1306cd5ab9fc8323e32aa013a114e0cd',
-            'dev_requirement' => false,
+            'dev_requirement' => true,
         ),
     ),
 );

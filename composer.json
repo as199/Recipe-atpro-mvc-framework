@@ -13,7 +13,7 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {
+    "require-dev": {
         "ext-pdo": "*",
         "twig/twig": "^3.3",
         "phpmailer/phpmailer": "^6.5",
