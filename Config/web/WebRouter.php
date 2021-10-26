@@ -2,7 +2,7 @@
 
 namespace Atpro\mvc\Config\web;
 
-use Atpro\Config\services\AtproDenied;
+use Atpro\mvc\Config\services\AtproDenied;
 
 class WebRouter
 {

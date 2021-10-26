@@ -3,6 +3,7 @@
 namespace Atpro\mvc\core;
 
 use GlobalHelpers\Extensions\ExtensionTwig;
+use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -12,7 +13,6 @@ use Twig\Loader\FilesystemLoader;
 abstract class AbstractController
 {
     const EXT = ".twig";
-
     /**
      * @return array
      * permet de definir les roles d'accés au fonction du controller
@@ -39,5 +39,9 @@ abstract class AbstractController
 
         $twig->addExtension(new ExtensionTwig());
         echo $twig->render($fichier . self::EXT, $data);
+    }
+    public function getRequest(): Request
+    {
+        return Request::createFromGlobals();
     }
 }

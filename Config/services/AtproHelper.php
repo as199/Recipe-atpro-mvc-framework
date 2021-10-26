@@ -14,6 +14,8 @@ define("REQUEST_TYPE", isset($_SERVER['REQUEST_SCHEME']));
 $globalUrl = REQUEST_TYPE === true ?$_GET['url']:$_SERVER['REQUEST_URI'];
 define("GLOBAL_URL", $globalUrl);
 const FLASH = "flash";
+const WEB = '/routes/web.php';
+const API = '/routes/api.php';
 //#endregion
 
 /**
