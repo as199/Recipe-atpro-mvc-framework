@@ -136,21 +136,22 @@ function removeSession(string $key): void
 
 /**
  * @param $data
+ * @deprecated
  */
-function dd($data)
-{
-    echo '<pre>';
-    print_r($data);
-    echo '<pre>';
-    die();
-}
+//function dd($data)
+//{
+//    echo '<pre>';
+//    print_r($data);
+//    echo '<pre>';
+//    die();
+//}
 
 /**
  * @param string $link
  * @return string
  * Permet d'inclures des fichiers css et js se trouvant dans le dossier public
  */
-function asset(string $link)
+function asset(string $link): string
 {
     return ASSETS . $link;
 }
