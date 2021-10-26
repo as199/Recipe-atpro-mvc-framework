@@ -10,14 +10,16 @@ class Application
 {
     /**
      * @throws JsonException
+     * @param string $webRoute Routes web
+     * @param string $apiRoute Routes api
      */
-    public static function start()
+    public static function start( string $webRoute, string $apiRoute)
     {
         $webRouter = new WebRouter(GLOBAL_URL);
         $apiRouter = new ApiRouter(GLOBAL_URL);
 
-        include(dirname(__DIR__) .WEB);
-        include(dirname(__DIR__) .API);
+        include($webRoute);
+        include($apiRoute);
 
         if (PHP_SAPI !== 'cli') {
             if (isAPI()) {
