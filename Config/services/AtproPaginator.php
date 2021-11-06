@@ -9,6 +9,7 @@ class AtproPaginator
     protected int $page;
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param float $totalRecords
      * @param int $recordsPerPage
      * @param int $page

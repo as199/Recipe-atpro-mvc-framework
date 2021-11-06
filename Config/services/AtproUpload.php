@@ -5,6 +5,7 @@ namespace Atpro\mvc\Config\services;
 class AtproUpload
 {
     /**
+     * @author Assane <atpro0290@gmail.com>
      * @param string $formInputName {{ le name de l'input file (obligatoire ) }}
      * @param string $folder {{ le dossier de destination  (obligatoire ) sauf si image formdata}}
      * @param string|null $extensionsAllowed {{les extensions autoriser séparer par des virgules (facultatifs) }}

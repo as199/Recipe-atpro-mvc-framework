@@ -10,10 +10,14 @@ use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\Loader\FilesystemLoader;
 
+/**
+ * @author Assane Dione <atpro0290@gmail.com>
+ */
 abstract class AbstractController
 {
     const EXT = ".twig";
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @return array
      * permet de definir les roles d'accés au fonction du controller
      * example: ['index'=>['ROLE_ADMIN','ROLE_SYS'],'login'=>[]]
@@ -21,6 +25,7 @@ abstract class AbstractController
     abstract public function getAccess(): array;
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param string $fichier {{ la page }}
      * @param array $data {{ les données }}
      * @throws LoaderError

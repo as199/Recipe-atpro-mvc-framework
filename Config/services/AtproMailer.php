@@ -9,6 +9,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 class AtproMailer
 {
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param $from {{ mail du destinataire }}
      * @param $companyName {{ nom de le  compagnie }}
      * @param array $recipients {{ le ou les recepteurs }}

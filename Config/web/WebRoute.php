@@ -5,6 +5,9 @@ namespace Atpro\mvc\Config\web;
 
 use Atpro\mvc\Config\services\AtproDenied;
 
+/**
+ * @author Assane Dione <atpro0290@gmail.com>
+ */
 class WebRoute
 {
     public string $path;

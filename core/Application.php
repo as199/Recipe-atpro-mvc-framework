@@ -9,6 +9,7 @@ use JsonException;
 class Application
 {
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @throws JsonException
      * @param string $webRoute Routes web
      * @param string $apiRoute Routes api
@@ -23,9 +24,19 @@ class Application
 
         if (PHP_SAPI !== 'cli') {
             if (isAPI()) {
-                $apiRouter->run();
+                try {
+                    $apiRouter->run();
+                } catch (\Exception $e) {
+                    echo $e->getMessage();
+                }
+                
             }
-            $webRouter->run();
+            try {
+                    $webRouter->run();
+            } catch (\Exception $e) {
+                echo $e->getMessage();
+            }
+            
         }
     }
 

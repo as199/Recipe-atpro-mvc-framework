@@ -6,12 +6,11 @@ use JsonException;
 
 class Jwt
 {
-    public function __construct()
-    {
-    }
+   
 
     /**
      * Generation JWT
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param array $header Header du token
      * @param array $payload Payload du Token
      * @param bool $state
@@ -40,6 +39,7 @@ class Jwt
 
     /**
      * Verification du token
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param string $token Token à Verify
      * @return bool Verify ou non
      * @throws JsonException
@@ -54,6 +54,7 @@ class Jwt
 
     /**
      * Récupère le header
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param string $token Token
      * @return array Header
      * @throws JsonException
@@ -66,6 +67,7 @@ class Jwt
 
     /**
      * Retourne le payload
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param string $token Token
      * @return array Payload
      * @throws JsonException
@@ -78,6 +80,7 @@ class Jwt
 
     /**
      * Verification de expiration
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param string $token Token à verifier
      * @return bool Verify ou non
      * @throws JsonException
@@ -91,6 +94,7 @@ class Jwt
 
     /**
      * Verification de la validity du token
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param string $token Token à verifier
      * @return bool Verify ou non
      */

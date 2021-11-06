@@ -4,6 +4,9 @@ namespace Atpro\mvc\Config\web;
 
 use Atpro\mvc\Config\services\AtproDenied;
 
+/**
+ * @author Assane Dione <atpro0290@gmail.com>
+ */
 class WebRouter
 {
 
@@ -16,6 +19,7 @@ class WebRouter
     }
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param string $path
      * @param string $action
      * @param array|null $middlewares
@@ -26,6 +30,7 @@ class WebRouter
     }
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param string $path
      * @param string $action
      * @param array|null $middlewares

@@ -4,8 +4,18 @@ namespace Atpro\mvc\Config\services;
 
 use Dompdf\Dompdf;
 
+/**
+ * @author Assane Dione <atpro0290@gmail.com>
+ */
 class AtproPdf
-{
+{   /**
+    * @author Assane Dione <atpro0290@gmail.com>
+    *
+    * @param  $htmlDataFormat
+    * @param array $paperFormat
+    * @param  $fileName
+    * @return void
+    */
     public static function pdf($htmlDataFormat, array $paperFormat, $fileName = null)
     {
         $dompdf = new Dompdf();

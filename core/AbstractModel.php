@@ -4,7 +4,9 @@ namespace Atpro\mvc\core;
 
 use PDO;
 use PDOStatement;
-
+/**
+ * @author Assane Dione <atpro0290@gmail.com>
+ */
 abstract class AbstractModel extends Database
 {
     protected $table;
