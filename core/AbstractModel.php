@@ -261,14 +261,15 @@ abstract class AbstractModel extends Database
      * Permet de verifier si une propriété appartient à la classe
      * @param $data
      */
-    public function loadData($data): void
+    public function loadData($data)
     {
-        foreach ($data as $key => $value) {
+       foreach ($data as $key => $value) {
             $setter = 'set' . ucfirst($key);
             if (method_exists($this, $setter)) {
-                $this->{$key} = $value;
+                $this->{$setter}($value);
             }
         }
+        return $this;
     }
 
     abstract public function rules(): array;
