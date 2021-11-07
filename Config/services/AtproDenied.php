@@ -7,7 +7,7 @@ use Atpro\mvc\core\AbstractController;
 
 class AtproDenied extends AbstractController
 {
-     /**
+    /**
      * @author Assane Dione <atpro0290@gmail.com>
      *
      * @param string $smg
@@ -18,14 +18,15 @@ class AtproDenied extends AbstractController
         header('HTTP/1.0 401 Unauthorized ');
         return throw new Exception('
         <style>
-             .page_404{ padding: 0 !important; background:#fff;}
+             .page_404{ padding: 0 !important; color:#fff; background-color: rgb(109, 125, 128);}
 
             .four_zero_four_bg{
-             background-image: url("../../image/dribbble_1.gif");height: 100vh;background-position: center;
-             background-size: cover;
-            background-position: center;
-             padding:0;
-             height: 100vh;
+                background-size: cover;
+                background-position: center;
+                padding:0;
+                height: 100vh;
+                display: flex;
+                justify-content:center;
             }
 
 
@@ -59,16 +60,15 @@ class AtproDenied extends AbstractController
         header('HTTP/1.0 404 Not Found ');
          return throw new Exception('
         <style>
-             .page_404{ padding: 0 !important; background:#fff;}
-
+            .page_404{ padding: 0 !important; color:#fff; background-color: rgb(109, 125, 128);}
             .four_zero_four_bg{
-             background-image: url("../../image/dribbble_1.gif");height: 100vh;background-position: center;
-             background-size: cover;
-            background-position: center;
-             padding:0;
-             height: 100vh;
+                background-size: cover;
+                background-position: center;
+                padding:0;
+                height: 100vh;
+                display: flex;
+                justify-content:center;
             }
-
 
             .four_zero_four_bg h1{
                 font-size:80px;
