@@ -48,6 +48,6 @@ class WebRouter
             }
         }
         $denied = new AtproDenied();
-        $denied->denied();
+        $denied->notFound();
     }
 }
