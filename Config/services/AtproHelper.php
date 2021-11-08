@@ -19,6 +19,7 @@ const API = '/routes/api.php';
 //#endregion
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @return bool
  * Permet de dire si la request provient d'un api
  */
@@ -29,6 +30,7 @@ function isAPI(): bool
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @return bool
  * Verifie si l'utilisateur est authentifié
  */
@@ -38,6 +40,7 @@ function isAuth(): bool
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @param string $key
  * @param string $code {{ 'success' or 'danger' }}
  * @param string $message
@@ -53,6 +56,7 @@ function addFlash(string $key, string $code, string $message)
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * Permet d'ajouter une pile de message d'erreur de validation
  * @param array $data
  */
@@ -65,6 +69,7 @@ function addFlashs(array $data)
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * Permet de supprimer les messages flash
  */
 function destroyFlash()
@@ -73,6 +78,7 @@ function destroyFlash()
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @param array $data
  * Permet d'ajouter des infos à la session
  */
@@ -84,6 +90,7 @@ function setSession(array $data)
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @param string $role
  * @return string
  */
@@ -94,6 +101,7 @@ function getRole(string $role)
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @param $data
  * @throws JsonException
  */
@@ -106,6 +114,7 @@ function Json_response($data)
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @param string $key
  * @return mixed|null
  * Permet de recuperer une information dans la session
@@ -116,6 +125,7 @@ function getSession(string $key)
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @param string $key
  * @return bool retourne true si la session existe
  */
@@ -125,6 +135,7 @@ function sessionExist(string $key): bool
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @param string $key
  * @return void
  * Permet de supprimer une variable dans la session
@@ -135,19 +146,20 @@ function removeSession(string $key): void
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @param $data
- * @deprecated
  */
-//function dd($data)
-//{
-//    echo '<pre>';
-//    print_r($data);
-//    echo '<pre>';
-//    die();
-//}
+function dd($data)
+{
+   echo '<pre>';
+   print_r($data);
+   echo '<pre>';
+   die();
+}
 
 /**
- * @param string $link
+ * @author ASSANE DIONE <atpro0290@gmail.com>
+ * @param string $link The file directory
  * @return string
  * Permet d'inclures des fichiers css et js se trouvant dans le dossier public
  */
@@ -155,8 +167,17 @@ function asset(string $link): string
 {
     return ASSETS . $link;
 }
+/**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
+ * @param string $password The user's password
+ * @return string
+ */
+function encode_password(string $password):string {
+    return  password_hash($password, PASSWORD_ARGON2I);
+}
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @return string la methode de la request
  *
  */
@@ -166,6 +187,7 @@ function method(): string
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @return bool si la method est de type get
  */
 function isGet(): bool
@@ -174,6 +196,7 @@ function isGet(): bool
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @return bool si la method est de type delete
  */
 function isDelete(): bool
@@ -182,6 +205,7 @@ function isDelete(): bool
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @return bool si la method est de type put
  */
 function isPut(): bool
@@ -190,6 +214,7 @@ function isPut(): bool
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @return bool Si la method est de type post
  */
 function isPost(): bool
@@ -198,6 +223,7 @@ function isPost(): bool
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @return array
  * Permet de recuperer le contenu de la request
  */
@@ -219,6 +245,7 @@ function getBody()
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @return array|string|string[]|null
  * Permet de retourner le HTTP_USER_AGENT
  */
@@ -230,6 +257,7 @@ function getAgent_no_version()
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @param string $name {{ le name }}
  * @param string $value {{ la valeur }}
  * @param int $expires {{ le temps expiration }}
@@ -245,6 +273,7 @@ function setCookies(string $name, string $value, int $expires = 604800)
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @param $name
  * Permet de supprimer un cookie
  */
@@ -254,6 +283,7 @@ function removeCookie($name)
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @param $name
  * @return mixed permet de recuperer un cookie via le name
  */
@@ -263,6 +293,7 @@ function getCookie($name)
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @param string $name
  * @return bool si le cookie existe
  */
@@ -272,6 +303,7 @@ function cookieExist(string $name)
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @param string $location
  * Permet de rediriger vers une url donnée
  */
@@ -291,6 +323,7 @@ function Redirect(string $location)
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @param $dirty
  * @return string
  */
@@ -300,6 +333,7 @@ function sanitize($dirty)
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * @param $name
  * @return string|null
  */
@@ -315,6 +349,7 @@ function input($name)
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * Permet de verifier si on a le droit d'acceder à une method
  * @param $access
  * @param $action
@@ -333,6 +368,7 @@ function VerifierAccess($access, $action)
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * Permet de verifier si on a le droit d'acceder à une method via l' api
  * @param $access
  * @param $action
@@ -353,6 +389,7 @@ function VerifierAccessApi($access, $action)
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * Permet de gerer le header pour des appelles api
  * @param string $method
  */
@@ -366,6 +403,7 @@ function headers(string $method)
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * Permet de recuperer le token
  * @return string
  */
@@ -386,6 +424,7 @@ function getToken()
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * Permet de retourner le header du payload
  * @return string[]
  */
@@ -398,14 +437,15 @@ function headerPayload()
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * Permet de surcharger le body du payload
- * @param int $id
- * @param array $roles
- * @param string $email
- * @param array $options
+ * @param int $id The user id
+ * @param array $roles The user roles
+ * @param string $email the user email
+ * @param array $options The other options
  * @return array
  */
-function setPayload(int $id, array $roles, string $email, array $options = [])
+function setPayload(int $id, array $roles, string $email=NULL, array $options = [])
 {
     return [
         'user_id' => $id,
@@ -416,6 +456,7 @@ function setPayload(int $id, array $roles, string $email, array $options = [])
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * Permet de retourner le role de l'utilisateur via le token
  * @return mixed|null
  * @throws JsonException
@@ -445,6 +486,7 @@ function verifToken(): mixed
 }
 
 /**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
  * Permet de decoder le token
  * @throws JsonException
  */

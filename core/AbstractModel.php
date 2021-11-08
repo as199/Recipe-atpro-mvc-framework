@@ -21,6 +21,7 @@ abstract class AbstractModel extends Database
 
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @return array|false egale PDO::FETCH_ASSOC =>2, PDO::FETCH_OBJ=>5,PDO::FETCH_DEFAULT=>0,
      * egale PDO::FETCH_ASSOC =>2, PDO::FETCH_OBJ=>5,PDO::FETCH_DEFAULT=>0,
      * PDO::FETCH_COLUMN =>7
@@ -34,6 +35,7 @@ abstract class AbstractModel extends Database
     }
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param array $criteres
      * @return array|false
      * Permet de recuperer des lignes via des criteres
@@ -53,6 +55,7 @@ abstract class AbstractModel extends Database
     }
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param array $criteres
      * @return array|false
      * Permet de recuperer une colonne via un array de critéres
@@ -72,6 +75,7 @@ abstract class AbstractModel extends Database
     }
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param string $login
      * @param string $password
      * @return bool
@@ -91,6 +95,7 @@ abstract class AbstractModel extends Database
     }
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param string $login
      * @param string $password
      * Permet de se connecter en donne array
@@ -108,6 +113,7 @@ abstract class AbstractModel extends Database
     }
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param int $id
      * @return array|false
      * Permet de recuperer une colonne via son id
@@ -120,6 +126,7 @@ abstract class AbstractModel extends Database
     }
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param array $except les champs as ne pas inserer
      * @return false|PDOStatement
      * Permet d'inserer un objet dans la base de donne
@@ -147,6 +154,7 @@ abstract class AbstractModel extends Database
     }
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param $data
      * @return int
      * Permet d'inserer dans la base de donne
@@ -168,6 +176,7 @@ abstract class AbstractModel extends Database
     }
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @return bool|false
      * Permet de mettre à jour une ligne
      */
@@ -190,6 +199,7 @@ abstract class AbstractModel extends Database
 
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param int $id
      * @return int
      * Permet de supprimer un element par son id
@@ -201,6 +211,7 @@ abstract class AbstractModel extends Database
     }
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @return int
      * Permet de calculer le nombre de lignes
      */
@@ -210,6 +221,7 @@ abstract class AbstractModel extends Database
         return $stmt->rowCount();
     }
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param string $sql
      * @param array|null $attributs
      * @return false|PDOStatement
@@ -226,6 +238,7 @@ abstract class AbstractModel extends Database
     }
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param array $donnees
      * @return $this
      * Creer un objet a partir d'un array
@@ -242,6 +255,7 @@ abstract class AbstractModel extends Database
     }
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * @param array $donnees
      * @return array
      * Creer un objet a partir d'un array
@@ -258,6 +272,7 @@ abstract class AbstractModel extends Database
     }
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * Permet de verifier si une propriété appartient à la classe
      * @param $data
      */
@@ -275,12 +290,12 @@ abstract class AbstractModel extends Database
     abstract public function rules(): array;
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * Permet de valider les different champs d'un formulaire
      * @return bool
      */
     public function validate(): bool
     {
-
         foreach ($this->rules() as $attribute => $rules) {
             $value = $this->{$attribute};
             foreach ($rules as $rule) {
@@ -321,6 +336,7 @@ abstract class AbstractModel extends Database
     }
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * Permet d'ajouter les messages d'erreur
      * @param $attribute
      * @param $rule
@@ -336,6 +352,7 @@ abstract class AbstractModel extends Database
     }
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * Permet d'ajouter les messages d'erreur
      * @param $attribute
      * @param $message
@@ -346,6 +363,7 @@ abstract class AbstractModel extends Database
     }
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * Retour les different erreurs suivants les cas possibles
      * @return string[]
      */
@@ -362,6 +380,7 @@ abstract class AbstractModel extends Database
     }
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * Permet de voir si les champs est valide ou pas
      * @param $attribute
      * @return false|mixed
@@ -372,6 +391,7 @@ abstract class AbstractModel extends Database
     }
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * Permet de recuper le message d'eurreur
      * @param $attribute
      * @return false|mixed
@@ -382,6 +402,7 @@ abstract class AbstractModel extends Database
     }
 
     /**
+     * @author Assane Dione <atpro0290@gmail.com>
      * Retourne les eurreurs de validation
      * @return array
      */
