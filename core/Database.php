@@ -5,10 +5,15 @@ namespace Atpro\mvc\core;
 use PDO;
 use PDOException;
 
+/**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
+ */
 class Database extends PDO
 {
     protected  $instance;
-
+    /**
+     * @author ASSANE DIONE <atpro0290@gmail.com>
+     */
     public function __construct()
     {
         if (strtolower($_ENV['DRIVER']) === 'mysql') {
@@ -37,6 +42,7 @@ class Database extends PDO
     }
 
     /**
+     * @author ASSANE DIONE <atpro0290@gmail.com>
      * @return Database
      */
     protected function getInstance(): Database

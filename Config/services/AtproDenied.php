@@ -9,7 +9,6 @@ class AtproDenied extends AbstractController
 {
     /**
      * @author Assane Dione <atpro0290@gmail.com>
-     *
      * @param string $smg
      * @return void
      */

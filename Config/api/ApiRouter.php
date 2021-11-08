@@ -4,6 +4,9 @@ namespace Atpro\mvc\Config\api;
 
 use JsonException;
 
+/**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
+ */
 class ApiRouter
 {
 
@@ -18,6 +21,7 @@ class ApiRouter
     }
 
     /**
+     * @author ASSANE DIONE <atpro0290@gmail.com>
      * @param string $path
      * @param string $action
      */
@@ -27,6 +31,7 @@ class ApiRouter
     }
 
     /**
+     * @author ASSANE DIONE <atpro0290@gmail.com>
      * @param string $path
      * @param string $action
      */
@@ -36,6 +41,7 @@ class ApiRouter
     }
 
     /**
+     * @author ASSANE DIONE <atpro0290@gmail.com>
      * @param string $path
      * @param string $action
      */
@@ -44,6 +50,7 @@ class ApiRouter
         $this->routes['DELETE'][] = new ApiRoute($path, $action);
     }
     /**
+     * @author ASSANE DIONE <atpro0290@gmail.com>
      * @param string $path
      * @param string $action
      */
@@ -53,6 +60,7 @@ class ApiRouter
     }
 
     /**
+     * @author ASSANE DIONE <atpro0290@gmail.com>
      * @param string $path
      * @param string $action
      */
@@ -62,6 +70,7 @@ class ApiRouter
     }
 
     /**
+     * @author ASSANE DIONE <atpro0290@gmail.com>
      * @throws JsonException
      */
     public function run()

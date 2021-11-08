@@ -4,6 +4,9 @@ namespace Atpro\mvc\Config\api;
 
 use JsonException;
 
+/**
+ * @author ASSANE DIONE <atpro0290@gmail.com>
+ */
 class ApiRoute
 {
     public string $path;
@@ -17,7 +20,11 @@ class ApiRoute
         $this->path  = trim(implode(DIRECTORY_SEPARATOR, $pathBrute), DIRECTORY_SEPARATOR);
         $this->action = $action;
     }
-
+    /**
+     * @author ASSANE DIONE <atpro0290@gmail.com>
+     * @param string $url
+     * @return boolean
+     */
     public function matches(string $url): bool
     {
         $path = preg_replace('#:([\w]+)#', '([^/]+)', $this->path);
@@ -32,6 +39,7 @@ class ApiRoute
     }
 
     /**
+     * @author ASSANE DIONE <atpro0290@gmail.com>
      * @throws JsonException
      */
     public function execute()

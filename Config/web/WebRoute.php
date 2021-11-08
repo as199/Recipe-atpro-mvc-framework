@@ -17,6 +17,7 @@ class WebRoute
     public AtproDenied $denied;
 
     /**
+     * @author ASSANE DIONE <atpro0290@gmail.com>
      * @param $path
      * @param $action
      * @param array $middlewares
@@ -28,7 +29,12 @@ class WebRoute
         $this->middlewares = $middlewares;
         $this->denied = new AtproDenied();
     }
-
+    /**
+     * @author ASSANE DIONE <atpro0290@gmail.com>
+     *
+     * @param string $url
+     * @return boolean|null
+     */
     public function matches(string $url): ?bool
     {
         $path = preg_replace('#:([\w]+)#', '([^/]+)', $this->path);
@@ -41,7 +47,10 @@ class WebRoute
 
         return false;
     }
-
+    /**
+     * @author ASSANE DIONE <atpro0290@gmail.com>
+     * @return void
+     */
     public function execute()
     {
         $params = explode('@', $this->action);
