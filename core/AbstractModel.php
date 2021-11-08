@@ -246,6 +246,7 @@ abstract class AbstractModel extends Database
     public function hydrate(array $donnees): self
     {
         foreach ($donnees as $key => $value) {
+            
             $setter = 'set' . ucfirst($key);
             if (method_exists($this, $setter)) {
                 $this->$setter($value);
