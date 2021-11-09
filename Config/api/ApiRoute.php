@@ -45,7 +45,8 @@ class ApiRoute
     public function execute()
     {
         $params = explode('@', $this->action);
-        $controller = new $params[0]();
+        $controllerName= 'App\ApiController\\'.$params[0];
+        $controller = new $controllerName();
         $method = $params[1];
         if (method_exists($controller, $method)) {
             $result = empty($controller->getAccess()) || VerifierAccessApi($controller->getAccess(), $method);

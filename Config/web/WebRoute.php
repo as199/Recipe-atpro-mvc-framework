@@ -54,7 +54,8 @@ class WebRoute
     public function execute()
     {
         $params = explode('@', $this->action);
-        $controller = new $params[0]();
+        $controllerName ='App\WebController\\'.$params[0];
+        $controller = new $controllerName();
         $method = $params[1];
         if (!empty($this->middlewares)) {
             foreach ($this->middlewares as $middle) {
