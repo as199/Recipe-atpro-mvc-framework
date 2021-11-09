@@ -72,5 +72,6 @@ class WebRoute
         }
         http_response_code(404);
         $this->denied->notFound();
+        exit();
     }
 }
