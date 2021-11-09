@@ -15,7 +15,7 @@ class WebRoute
     public array $matchs;
     public array $middlewares;
     public AtproDenied $denied;
-
+    const URL_SEPARATOR= "@";
     /**
      * @author ASSANE DIONE <atpro0290@gmail.com>
      * @param $path
@@ -53,7 +53,7 @@ class WebRoute
      */
     public function execute()
     {
-        $params = explode('@', $this->action);
+        $params = explode(URL_SEPARATOR, $this->action);
         $controller = new $params[0]();
         $method = $params[1];
         if (!empty($this->middlewares)) {
