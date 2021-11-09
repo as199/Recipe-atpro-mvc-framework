@@ -15,7 +15,6 @@ class WebRoute
     public array $matchs;
     public array $middlewares;
     public AtproDenied $denied;
-
     /**
      * @author ASSANE DIONE <atpro0290@gmail.com>
      * @param $path
@@ -53,9 +52,14 @@ class WebRoute
      */
     public function execute()
     {
+<<<<<<< HEAD
         $params = explode('@', $this->action);
         $controllerName ='App\WebController\\'.$params[0];
         $controller = new $controllerName();
+=======
+        $params = explode("@", $this->action);
+        $controller = new $params[0]();
+>>>>>>> b42d3956a25b59232a89859829999abcd59c3269
         $method = $params[1];
         if (!empty($this->middlewares)) {
             foreach ($this->middlewares as $middle) {
@@ -73,5 +77,6 @@ class WebRoute
         }
         http_response_code(404);
         $this->denied->notFound();
+        exit();
     }
 }
