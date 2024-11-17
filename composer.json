@@ -1,23 +1,34 @@
 {
     "name": "dione/recipe-atpro-mvc-framework",
+    "description": "Un framework MVC PHP moderne et flexible",
+    "type": "library",
     "license": "MIT",
+    "require": {
+        "php": ">=8.0",
+        "twig/twig": "^3.3",
+        "phpmailer/phpmailer": "^6.5",
+        "dompdf/dompdf": "^1.2.2",
+        "ext-pdo": "*",
+        "symfony/http-foundation": "^5.3",
+        "symfony/dotenv": "^5.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "symfony/var-dumper": "^5.3"
+    },
     "autoload": {
         "psr-4": {
             "Atpro\\mvc\\": "."
         }
     },
-    "authors": [
-        {
-            "name": "as199",
-            "email": "dioneassane0290@gmail.com"
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
         }
-    ],
+    },
     "minimum-stability": "stable",
-    "require": {
-        "twig/twig": "^3.3",
-        "phpmailer/phpmailer": "^6.5",
-        "dompdf/dompdf": "^1.2.2",
-      "ext-pdo": "*",
-        "symfony/http-foundation": "^5.3"
+    "prefer-stable": true,
+    "scripts": {
+        "test": "phpunit"
     }
 }

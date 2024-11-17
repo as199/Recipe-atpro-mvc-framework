@@ -4,411 +4,168 @@ namespace Atpro\mvc\core;
 
 use PDO;
 use PDOStatement;
-/**
- * @author Assane Dione <atpro0290@gmail.com>
- */
-abstract class AbstractModel extends Database
+use RuntimeException;
+
+abstract class AbstractModel
 {
-    protected $table;
-    protected const RULE_REQUIRED = 'required';
-    protected const RULE_EMAIL = 'email';
-    protected const RULE_MIN = 'min';
-    protected const RULE_MAX = 'max';
-    protected const RULE_MATCH = 'match';
-    protected const RULE_UNIQUE = 'unique';
+    protected PDO $db;
+    protected string $table;
+    protected ?int $id = null;
+    protected array $fillable = [];
+    protected array $hidden = ['password'];
 
-    private array $errors = [];
-
-
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * @return array|false egale PDO::FETCH_ASSOC =>2, PDO::FETCH_OBJ=>5,PDO::FETCH_DEFAULT=>0,
-     * egale PDO::FETCH_ASSOC =>2, PDO::FETCH_OBJ=>5,PDO::FETCH_DEFAULT=>0,
-     * PDO::FETCH_COLUMN =>7
-     * Permet de recuperer toutes les lignes d'une table
-     */
-    public function findAll()
+    public function __construct()
     {
-        $result =  $this->req("SELECT * FROM  $this->table");
-        $result->setFetchMode(PDO::FETCH_CLASS, get_class($this));
-        return $result->fetchAll();
+        $this->db = Database::getInstance();
+        $this->table = $this->getTableName();
+        $this->initializeFillable();
     }
 
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * @param array $criteres
-     * @return array|false
-     * Permet de recuperer des lignes via des criteres
-     */
-    public function findBy(array $criteres)
+    protected function execute(string $sql, array $params = []): PDOStatement
     {
-        $champs = [];
-        $valeurs = [];
-        foreach ($criteres as $champ => $valeur) {
-            $champs[] = "$champ = ?";
-            $valeurs[] = $valeur;
+        try {
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute($params);
+            return $stmt;
+        } catch (\PDOException $e) {
+            throw new RuntimeException("Database error: " . $e->getMessage());
         }
-        $liste_champs = implode(' AND ', $champs);
-        $result= $this->req("SELECT * FROM  $this->table  WHERE  $liste_champs", $valeurs);
-        $result->setFetchMode(PDO::FETCH_CLASS, get_class($this));
-        return $result->fetchAll();
     }
 
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * @param array $criteres
-     * @return array|false
-     * Permet de recuperer une colonne via un array de critéres
-     */
-    public function findOneBy(array $criteres)
+    public function findAll(array $columns = ['*']): array
     {
-        $champs = [];
-        $valeurs = [];
-        foreach ($criteres as $champ => $valeur) {
-            $champs[] = "$champ = ?";
-            $valeurs[] = $valeur;
+        $cols = implode(', ', $columns);
+        return $this->execute("SELECT {$cols} FROM {$this->table}")->fetchAll();
+    }
+
+    public function find($id)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM " . $this->getTable() . " WHERE id = ?");
+        $stmt->execute([$id]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        
+        if (!$result) {
+            return null;
         }
-        $liste_champs = implode(' AND ', $champs);
-        $result =  $this->req("SELECT * FROM  $this->table  WHERE  $liste_champs", $valeurs);
-        $result->setFetchMode(PDO::FETCH_CLASS, get_class($this));
-        return  $result->fetchAll();
-    }
-
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * @param string $login
-     * @param string $password
-     * @return bool
-     * Permet de se connecter en donne array
-     */
-    public function auth(string $login, string $password): bool
-    {
-        $db = $this->getInstance();
-        $result =  $db->prepare("SELECT * FROM  $this->table  WHERE email=:email");
-         $result->execute(['email'=>$login]);
-        $data =$result->fetch(PDO::FETCH_ASSOC);
-        if (!empty($data) && password_verify($password, $data['password'])) {
-            setSession($data);
-            return true;
+        
+        // Créer une nouvelle instance du modèle avec les données
+        $model = new static();
+        foreach ($result as $key => $value) {
+            $model->$key = $value;
         }
-        return false;
+        return $model;
     }
 
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * @param string $login
-     * @param string $password
-     * Permet de se connecter en donne array
-     * @return mixed|void
-     */
-    public function authApi(string $login, string $password)
+    public function findBy(array $criteria, array $columns = ['*']): array
     {
-        $result =  $this->req("SELECT * FROM  $this->table  WHERE email=?", [$login]);
-        $result->setFetchMode(PDO::FETCH_CLASS, get_class($this));
-        $data = $result->fetch();
-        if (!empty($data) && password_verify($password, $data->password)) {
-            return $data;
+        $cols = implode(', ', $columns);
+        $where = implode(' AND ', array_map(fn($field) => "$field = ?", array_keys($criteria)));
+        
+        return $this->execute(
+            "SELECT {$cols} FROM {$this->table} WHERE {$where}",
+            array_values($criteria)
+        )->fetchAll();
+    }
+
+    public function create(array $data): ?int
+    {
+        $fields = array_intersect_key($data, array_flip($this->fillable));
+        
+        $sql = sprintf(
+            "INSERT INTO %s (%s) VALUES (%s)",
+            $this->table,
+            implode(', ', array_keys($fields)),
+            str_repeat('?,', count($fields) - 1) . '?'
+        );
+
+        $this->execute($sql, array_values($fields));
+        return (int)$this->db->lastInsertId();
+    }
+
+    public function update(int $id, array $data): bool
+    {
+        $fields = array_intersect_key($data, array_flip($this->fillable));
+        if (empty($fields)) {
+            return false;
         }
-        return null;
+
+        $sql = sprintf(
+            "UPDATE %s SET %s WHERE id = ?",
+            $this->table,
+            implode(', ', array_map(fn($field) => "$field = ?", array_keys($fields)))
+        );
+
+        $values = array_values($fields);
+        $values[] = $id;
+
+        return $this->execute($sql, $values)->rowCount() === 1;
     }
 
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * @param int $id
-     * @return array|false
-     * Permet de recuperer une colonne via son id
-     */
-    public function find(int $id)
+    public function delete(int $id): bool
     {
-        $result =  $this->req("SELECT * FROM $this->table WHERE id=$id");
-        $result->setFetchMode(PDO::FETCH_CLASS, get_class($this));
-        return $result->fetchAll();
+        return $this->execute(
+            "DELETE FROM {$this->table} WHERE id = ?",
+            [$id]
+        )->rowCount() === 1;
     }
 
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * @param array $except les champs as ne pas inserer
-     * @return false|PDOStatement
-     * Permet d'inserer un objet dans la base de donne
-     */
-    public function create(array $except = [])
+    public function paginate(int $page = 1, int $perPage = 15): array
     {
-        $champs = [];
-        $inter = [];
-        $valeurs = [];
-        foreach ($this as $champ => $valeur) {
-            $setter = 'set' . ucfirst($champ);
-            if (method_exists($this, $setter) && !in_array($champ, $except, true)) {
-                $champs[] = $champ;
-                $inter[] = "?";
-                if ($setter === 'setPassword') {
-                    $valeurs[] = password_hash($valeur, PASSWORD_ARGON2I);
-                } else {
-                    $valeurs[] = $valeur;
-                }
-            }
-        }
-        $liste_champs = implode(', ', $champs);
-        $liste_inter = implode(', ', $inter);
-        return $this->req("INSERT INTO  $this->table ($liste_champs)VALUES($liste_inter)", $valeurs);
-    }
+        $offset = ($page - 1) * $perPage;
+        $total = (int)$this->execute("SELECT COUNT(*) FROM {$this->table}")->fetchColumn();
+        
+        $items = $this->execute(
+            "SELECT * FROM {$this->table} LIMIT ? OFFSET ?",
+            [$perPage, $offset]
+        )->fetchAll();
 
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * @param $data
-     * @return int
-     * Permet d'inserer dans la base de donne
-     */
-    public function save($data): int
-    {
-        $champs = [];
-        $inter = [];
-        $valeurs = [];
-        foreach ($data as $champ => $valeur) {
-            $champs[] = $champ;
-            $inter[] = "?";
-            $valeurs[] = $valeur;
-        }
-        $liste_champs = implode(', ', $champs);
-        $liste_inter = implode(', ', $inter);
-        $rep= $this->req("INSERT INTO  $this->table ($liste_champs)VALUES($liste_inter)", $valeurs);
-        return $rep->rowCount()=== 1;
-    }
-
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * @return bool|false
-     * Permet de mettre à jour une ligne
-     */
-    public function update(): bool
-    {
-        $champs = [];
-        $valeurs = [];
-        foreach ($this as $champ => $valeur) {
-            $setter = 'set' . ucfirst($champ);
-            if (method_exists($this, $setter)) {
-                $champs[] = "$champ = ?";
-                $valeurs[] = $valeur;
-            }
-        }
-        $valeurs[] = $this->id;
-        $liste_champs = implode(', ', $champs);
-        $result= $this->req("UPDATE  $this->table  SET  $liste_champs  WHERE id = ?", $valeurs);
-        return $result->rowCount()=== 1;
-    }
-
-
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * @param int $id
-     * @return int
-     * Permet de supprimer un element par son id
-     */
-    public function delete(int $id): int
-    {
-        $rep= $this->req("DELETE FROM $this->table WHERE id = ?", [$id]);
-        return $rep->rowCount()===1;
-    }
-
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * @return int
-     * Permet de calculer le nombre de lignes
-     */
-    public function count(): int
-    {
-        $stmt = $this->req(" SELECT * FROM $this->table");
-        return $stmt->rowCount();
-    }
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * @param string $sql
-     * @param array|null $attributs
-     * @return false|PDOStatement
-     */
-    public function req(string $sql, array $attributs = null)
-    {
-        $db = $this->getInstance();
-        if ($attributs !== null) {
-            $query = $db->prepare($sql);
-            $query->execute($attributs);
-            return $query;
-        }
-        return $db->query($sql);
-    }
-
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * @param array $donnees
-     * @return $this
-     * Creer un objet a partir d'un array
-     */
-    public function hydrate(array $donnees): self
-    {
-        foreach ($donnees as $key => $value) {
-            
-            $setter = 'set' . ucfirst($key);
-            if (method_exists($this, $setter)) {
-                $this->$setter($value);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * @param array $donnees
-     * @return array
-     * Creer un objet a partir d'un array
-     */
-    public function hydrateToArray(array $donnees): array
-    {
-        foreach ($donnees as $key => $value) {
-            $setter = 'set' . ucfirst($key);
-            if (method_exists($this, $setter)) {
-                $data[$key]=$value;
-            }
-        }
-        return $data;
-    }
-
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * Permet de verifier si une propriété appartient à la classe
-     * @param $data
-     */
-    public function loadData($data)
-    {
-       foreach ($data as $key => $value) {
-            $setter = 'set' . ucfirst($key);
-            if (method_exists($this, $setter)) {
-                $this->{$setter}($value);
-            }
-        }
-        return $this;
-    }
-
-    abstract public function rules(): array;
-
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * Permet de valider les different champs d'un formulaire
-     * @return bool
-     */
-    public function validate(): bool
-    {
-        foreach ($this->rules() as $attribute => $rules) {
-            $value = $this->{$attribute};
-            foreach ($rules as $rule) {
-                $ruleName = $rule;
-                if (!is_string($ruleName)) {
-                    $ruleName = $rule[0];
-                }
-                if ($ruleName  === self::RULE_REQUIRED && !$value) {
-                    $this->addErrorForRule($attribute, self::RULE_REQUIRED);
-                }
-                if ($ruleName  === self::RULE_EMAIL && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
-                    $this->addErrorForRule($attribute, self::RULE_EMAIL);
-                }
-                if ($ruleName === self::RULE_MIN && strlen($value) < $rule['min']) {
-                    $this->addErrorForRule($attribute, self::RULE_MIN, $rule);
-                }
-                if ($ruleName === self::RULE_MAX && strlen($value) > $rule['max']) {
-                    $this->addErrorForRule($attribute, self::RULE_MAX, $rule);
-                }
-                if ($ruleName === self::RULE_MATCH && $value !== $this->{$rule['match']}) {
-                    $this->addErrorForRule($attribute, self::RULE_MATCH, $rule);
-                }
-                if ($ruleName === self::RULE_UNIQUE) {
-                    $uniqueAttribute= $attribute = $rule['attribute'] ?? $attribute;
-                    $tableName = $this->table;
-                    $statement= $this->getInstance()
-                        ->prepare("SELECT * FROM $tableName WHERE $uniqueAttribute =:attribute");
-                    $statement->bindValue(":attribute", $value);
-                    $statement->execute();
-                    $record = $statement->fetchObject();
-                    if ($record) {
-                        $this->addErrorForRule($attribute, self::RULE_UNIQUE, ['field'=> $value]);
-                    }
-                }
-            }
-        }
-        return (empty($this->errors));
-    }
-
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * Permet d'ajouter les messages d'erreur
-     * @param $attribute
-     * @param $rule
-     * @param array $params
-     */
-    private function addErrorForRule($attribute, $rule, array $params = []): void
-    {
-        $message = $this->errorMessages()[$rule] ?? '';
-        foreach ($params as $key => $value) {
-            $message = str_replace("$key", $value, $message);
-        }
-        $this->errors[$attribute][] = $message;
-    }
-
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * Permet d'ajouter les messages d'erreur
-     * @param $attribute
-     * @param $message
-     */
-    public function addError($attribute, $message): void
-    {
-        $this->errors[$attribute][] = $message;
-    }
-
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * Retour les different erreurs suivants les cas possibles
-     * @return string[]
-     */
-    public function errorMessages(): array
-    {
         return [
-            self::RULE_REQUIRED => 'This field is required',
-            self::RULE_EMAIL => 'This field must be valid email address',
-            self::RULE_MIN => 'Min length of this field must be {min}',
-            self::RULE_MAX => 'Max length of this field must be {max}',
-            self::RULE_MATCH => 'This field must be same as {match}',
-            self::RULE_UNIQUE => 'Record with this {field} already exists'
+            'data' => $items,
+            'total' => $total,
+            'per_page' => $perPage,
+            'current_page' => $page,
+            'last_page' => ceil($total / $perPage)
         ];
     }
 
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * Permet de voir si les champs est valide ou pas
-     * @param $attribute
-     * @return false|mixed
-     */
-    public function hasError($attribute)
+    protected function getModifiableFields(): array
     {
-        return $this->errors[$attribute] ?? false;
+        $fields = [];
+        foreach (get_object_vars($this) as $field => $value) {
+            if (in_array($field, $this->fillable) && !is_null($value)) {
+                $fields[$field] = $value;
+            }
+        }
+        return $fields;
     }
 
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * Permet de recuper le message d'eurreur
-     * @param $attribute
-     * @return false|mixed
-     */
-    public function getFirstError($attribute)
+    protected function getTableName(): string
     {
-        return $this->errors[$attribute][0] ?? false;
+        $className = (new \ReflectionClass($this))->getShortName();
+        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $className));
     }
 
-    /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * Retourne les eurreurs de validation
-     * @return array
-     */
-    public function getErrors()
+    protected function initializeFillable(): void
     {
-        return $this->errors;
+        if (empty($this->fillable)) {
+            $properties = (new \ReflectionClass($this))->getProperties(\ReflectionProperty::IS_PUBLIC);
+            $this->fillable = array_map(fn($prop) => $prop->getName(), $properties);
+        }
+    }
+
+    public function toArray(): array
+    {
+        $data = get_object_vars($this);
+        return array_diff_key($data, array_flip($this->hidden));
+    }
+
+    public function getDb()
+    {
+        return $this->db;
+    }
+
+    public function getTable(): string
+    {
+        return $this->table;
     }
 }

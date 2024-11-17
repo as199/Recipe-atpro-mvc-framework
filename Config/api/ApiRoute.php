@@ -9,55 +9,77 @@ use JsonException;
  */
 class ApiRoute
 {
-    public string $path;
-    public string $action;
-    public $matchs;
+    private string $path;
+    private string $action;
+    private array $parameters = [];
+    private array $matches = [];
 
-    public function __construct($path, $action)
+    public function __construct(string $path, string $action)
     {
-        $pathBrute = explode(DIRECTORY_SEPARATOR, trim($path, DIRECTORY_SEPARATOR));
-        unset($pathBrute[0]);
-        $this->path  = trim(implode(DIRECTORY_SEPARATOR, $pathBrute), DIRECTORY_SEPARATOR);
+        $this->path = $this->normalizePath($path);
         $this->action = $action;
+        $this->extractParameters();
     }
-    /**
-     * @author ASSANE DIONE <atpro0290@gmail.com>
-     * @param string $url
-     * @return boolean
-     */
+
     public function matches(string $url): bool
     {
-        $path = preg_replace('#:([\w]+)#', '([^/]+)', $this->path);
-        $pathToMatch = "#^$path$#";
-
-        if (preg_match($pathToMatch, $url, $matches)) {
-            $this->matchs = $matches;
+        $pattern = $this->buildPattern();
+        if (preg_match($pattern, $url, $matches)) {
+            $this->matches = $matches;
             return true;
         }
-
         return false;
     }
 
     /**
-     * @author ASSANE DIONE <atpro0290@gmail.com>
      * @throws JsonException
      */
-    public function execute()
+    public function execute(): void
     {
-        $params = explode('@', $this->action);
-        $controllerName= 'App\ApiController\\'.$params[0];
-        $controller = new $controllerName();
-        $method = $params[1];
-        if (method_exists($controller, $method)) {
-            $result = empty($controller->getAccess()) || VerifierAccessApi($controller->getAccess(), $method);
-            if ($result) {
-                return (isset($this->matchs[1])) ? $controller->$method($this->matchs[1]) : $controller->$method();
-            }
+        [$controller, $method] = $this->parseAction();
+        $params = $this->extractMatchedParameters();
 
-            http_response_code(401);
-            Json_response(['message' => 'Access not autoriser']);
+        if (!class_exists($controller)) {
+            throw new \RuntimeException("Controller $controller not found");
         }
-        http_response_code(500);
-        Json_response(['message' => 'cette routes nexiste pas']);
+
+        $instance = new $controller();
+        if (!method_exists($instance, $method)) {
+            throw new \RuntimeException("Method $method not found in $controller");
+        }
+
+        $response = $instance->$method(...$params);
+        if (is_array($response)) {
+            header('Content-Type: application/json');
+            echo json_encode($response, JSON_THROW_ON_ERROR);
+        }
+    }
+
+    private function normalizePath(string $path): string
+    {
+        return '/' . trim($path, '/');
+    }
+
+    private function extractParameters(): void
+    {
+        preg_match_all('/:(\w+)/', $this->path, $matches);
+        $this->parameters = $matches[1];
+    }
+
+    private function buildPattern(): string
+    {
+        $pattern = preg_replace('/:(\w+)/', '([^/]+)', $this->path);
+        return "#^$pattern$#";
+    }
+
+    private function parseAction(): array
+    {
+        return explode('@', $this->action);
+    }
+
+    private function extractMatchedParameters(): array
+    {
+        array_shift($this->matches);
+        return array_values($this->matches);
     }
 }

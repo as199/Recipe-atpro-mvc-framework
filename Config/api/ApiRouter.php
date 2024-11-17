@@ -3,6 +3,7 @@
 namespace Atpro\mvc\Config\api;
 
 use JsonException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @author ASSANE DIONE <atpro0290@gmail.com>
@@ -10,14 +11,12 @@ use JsonException;
 class ApiRouter
 {
 
-    public string $url;
-    public array $routes = [];
+    private string $url;
+    private array $routes = [];
 
-    public function __construct($url)
+    public function __construct(string $url)
     {
-        $urlBrute = explode(DIRECTORY_SEPARATOR, trim(filter_var($url, FILTER_SANITIZE_URL), DIRECTORY_SEPARATOR));
-        unset($urlBrute[0]);
-        $this->url = trim(implode(DIRECTORY_SEPARATOR, $urlBrute), DIRECTORY_SEPARATOR);
+        $this->url = $this->normalizeUrl($url);
     }
 
     /**
@@ -27,7 +26,7 @@ class ApiRouter
      */
     public function get(string $path, string $action): void
     {
-        $this->routes['GET'][] = new ApiRoute($path, $action);
+        $this->addRoute('GET', $path, $action);
     }
 
     /**
@@ -37,26 +36,7 @@ class ApiRouter
      */
     public function post(string $path, string $action): void
     {
-        $this->routes['POST'][] = new ApiRoute($path, $action);
-    }
-
-    /**
-     * @author ASSANE DIONE <atpro0290@gmail.com>
-     * @param string $path
-     * @param string $action
-     */
-    public function delete(string $path, string $action): void
-    {
-        $this->routes['DELETE'][] = new ApiRoute($path, $action);
-    }
-    /**
-     * @author ASSANE DIONE <atpro0290@gmail.com>
-     * @param string $path
-     * @param string $action
-     */
-    public function patch(string $path, string $action): void
-    {
-        $this->routes['PATCH'][] = new ApiRoute($path, $action);
+        $this->addRoute('POST', $path, $action);
     }
 
     /**
@@ -66,29 +46,58 @@ class ApiRouter
      */
     public function put(string $path, string $action): void
     {
-        $this->routes['PUT'][] = new ApiRoute($path, $action);
+        $this->addRoute('PUT', $path, $action);
+    }
+
+    /**
+     * @author ASSANE DIONE <atpro0290@gmail.com>
+     * @param string $path
+     * @param string $action
+     */
+    public function delete(string $path, string $action): void
+    {
+        $this->addRoute('DELETE', $path, $action);
     }
 
     /**
      * @author ASSANE DIONE <atpro0290@gmail.com>
      * @throws JsonException
      */
-    public function run()
+    public function run(): void
     {
-        if (!isset($this->routes[$_SERVER['REQUEST_METHOD']])) {
-            http_response_code(500);
-            Json_response([
-                'message' => "Method ".strtolower($_SERVER['REQUEST_METHOD'])." not found on ApiRoutes.php"
-            ]);
-            exit();
+        $method = $_SERVER['REQUEST_METHOD'];
+        if (!isset($this->routes[$method])) {
+            $this->sendJsonResponse(['error' => 'Method not allowed'], Response::HTTP_METHOD_NOT_ALLOWED);
+            return;
         }
-        foreach ($this->routes[$_SERVER['REQUEST_METHOD']] as $route) {
+
+        foreach ($this->routes[$method] as $route) {
             if ($route->matches($this->url)) {
-                headers($_SERVER['REQUEST_METHOD']);
-                return $route->execute();
+                $route->execute();
+                return;
             }
         }
-        http_response_code(400);
-        Json_response(['message' => 'Bad request']);
+
+        $this->sendJsonResponse(['error' => 'Route not found'], Response::HTTP_NOT_FOUND);
+    }
+
+    private function addRoute(string $method, string $path, string $action): void
+    {
+        $this->routes[$method][] = new ApiRoute($path, $action);
+    }
+
+    private function normalizeUrl(string $url): string
+    {
+        return trim(filter_var($url, FILTER_SANITIZE_URL), '/');
+    }
+
+    /**
+     * @throws JsonException
+     */
+    private function sendJsonResponse(array $data, int $status = 200): void
+    {
+        http_response_code($status);
+        header('Content-Type: application/json');
+        echo json_encode($data, JSON_THROW_ON_ERROR);
     }
 }

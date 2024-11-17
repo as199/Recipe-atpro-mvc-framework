@@ -2,51 +2,61 @@
 
 namespace Atpro\mvc\core;
 
-use GlobalHelpers\Extensions\ExtensionTwig;
-use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\Loader\FilesystemLoader;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
-/**
- * @author Assane Dione <atpro0290@gmail.com>
- */
 abstract class AbstractController
 {
-    const EXT = ".twig";
+    protected const TEMPLATE_EXT = ".twig";
+    protected Environment $twig;
+    protected Request $request;
+    
+    public function __construct()
+    {
+        $this->initializeTwig();
+        $this->request = Request::createFromGlobals();
+    }
+
     /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * @return array
-     * permet de definir les roles d'accés au fonction du controller
-     * example: ['index'=>['ROLE_ADMIN','ROLE_SYS'],'login'=>[]]
+     * Définit les rôles d'accès aux fonctions du controller
+     * @return array Format: ['methodName' => ['ROLE_1', 'ROLE_2']]
      */
     abstract public function getAccess(): array;
 
     /**
-     * @author Assane Dione <atpro0290@gmail.com>
-     * @param string $fichier {{ la page }}
-     * @param array $data {{ les données }}
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
+     * Rend une vue avec les données fournies
+     * @throws LoaderError|RuntimeError|SyntaxError
      */
-    public function render(string $fichier, array $data = [])
+    protected function render(string $template, array $data = []): Response
     {
-        $loader = new FilesystemLoader('../'.VIEWS_FILES);
-        $twig = new Environment($loader, [
-            'cache' => false,
-        ]);
-        /**
-         * Pour inclures des liens css , js et des images se situant dans le dossier public
-         */
-
-        $twig->addExtension(new ExtensionTwig());
-        echo $twig->render($fichier . self::EXT, $data);
+        $content = $this->twig->render($template . self::TEMPLATE_EXT, $data);
+        return new Response($content);
     }
-    public function getRequest(): Request
+
+    /**
+     * Retourne une réponse JSON
+     */
+    protected function json($data, int $status = 200): JsonResponse
     {
-        return Request::createFromGlobals();
+        return new JsonResponse($data, $status);
+    }
+
+    /**
+     * Initialise l'environnement Twig
+     */
+    private function initializeTwig(): void
+    {
+        $loader = new FilesystemLoader('../' . VIEWS_FILES);
+        $this->twig = new Environment($loader, [
+            'cache' => false,
+            'debug' => $_ENV['APP_ENV'] === 'dev',
+            'auto_reload' => true
+        ]);
     }
 }
